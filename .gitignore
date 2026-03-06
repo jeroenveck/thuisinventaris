@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Database (lokale data — maak een eigen kopie)
+prisma/dev.db
+prisma/dev.db-journal
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Uploads
+public/uploads/*
+!public/uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+prisma/prisma/

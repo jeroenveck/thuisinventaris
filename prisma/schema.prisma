@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id            String    @id @default(cuid())
+  name          String
+  category      String
+  brand         String?
+  model         String?
+  description   String?
+  serialNumber  String?
+  purchaseDate  DateTime?
+  purchasePrice Float?
+  currentValue  Float     @default(0)
+  condition     String    @default("Good")
+  location      String?
+  notes         String?
+  imageUrl      String?
+  isInsured     Boolean   @default(false)
+  insuranceRef  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String   @default("#6366f1")
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
