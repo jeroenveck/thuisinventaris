@@ -2,10 +2,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import ItemForm from '@/components/ItemForm'
+import { itemUrl } from '@/lib/utils'
 
-export default async function EditItemPage({ params }: { params: { id: string } }) {
+export default async function EditItemPage({ params }: { params: { category: string; slug: string } }) {
   const [item, categories] = await Promise.all([
-    prisma.item.findUnique({ where: { id: params.id } }),
+    prisma.item.findUnique({ where: { slug: params.slug } }),
     prisma.category.findMany({ orderBy: { name: 'asc' } }),
   ])
 
@@ -29,7 +30,7 @@ export default async function EditItemPage({ params }: { params: { id: string } 
         <div className="flex items-center gap-2 text-sm text-slate-400 mb-1">
           <Link href="/items" className="hover:text-slate-600 transition-colors">Inventaris</Link>
           <span>›</span>
-          <Link href={`/items/${item.id}`} className="hover:text-slate-600 transition-colors truncate max-w-xs">
+          <Link href={itemUrl(item)} className="hover:text-slate-600 transition-colors truncate max-w-xs">
             {item.name}
           </Link>
           <span>›</span>

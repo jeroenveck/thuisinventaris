@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { formatCurrency, formatDate, CONDITION_COLORS } from '@/lib/utils'
+import { formatCurrency, formatDate, CONDITION_COLORS, itemUrl } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -167,7 +167,7 @@ export default async function Dashboard() {
                 return (
                   <Link
                     key={item.id}
-                    href={`/items/${item.id}`}
+                    href={itemUrl(item)}
                     className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group"
                   >
                     {item.imageUrl ? (

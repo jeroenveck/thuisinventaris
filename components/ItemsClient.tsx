@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { formatCurrency, CONDITION_COLORS, type Item, type Category } from '@/lib/utils'
+import { formatCurrency, CONDITION_COLORS, itemUrl, type Item, type Category } from '@/lib/utils'
 
 type Props = {
   items: Item[]
@@ -191,7 +191,7 @@ export default function ItemsClient({ items, categories, initialCategory = '' }:
                             </div>
                           )}
                           <div>
-                            <Link href={`/items/${item.id}`} className="font-medium text-slate-900 hover:text-indigo-600 transition-colors">
+                            <Link href={itemUrl(item)} className="font-medium text-slate-900 hover:text-indigo-600 transition-colors">
                               {item.name}
                             </Link>
                             {item.location && (
@@ -227,7 +227,7 @@ export default function ItemsClient({ items, categories, initialCategory = '' }:
                       <td className="px-4 py-4">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Link
-                            href={`/items/${item.id}`}
+                            href={itemUrl(item)}
                             className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
                             title="Bekijken"
                           >
@@ -236,7 +236,7 @@ export default function ItemsClient({ items, categories, initialCategory = '' }:
                             </svg>
                           </Link>
                           <Link
-                            href={`/items/${item.id}/edit`}
+                            href={`${itemUrl(item)}/edit`}
                             className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
                             title="Bewerken"
                           >

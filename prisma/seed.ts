@@ -2,6 +2,17 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+}
+
 async function main() {
   // Seed categorieën
   const categories = [
@@ -179,7 +190,7 @@ async function main() {
   ]
 
   for (const item of items) {
-    await prisma.item.create({ data: item })
+    await prisma.item.create({ data: { ...item, slug: slugify(item.name) } })
   }
 
   console.log(`✓ ${categories.length} categorieën aangemaakt`)

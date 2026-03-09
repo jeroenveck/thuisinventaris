@@ -89,6 +89,25 @@ prisma/
   dev.db                    SQLite database file
 ```
 
+## Productie
+
+```bash
+# Build en start de productieversie
+npm run build
+npm start
+```
+
+Bij problemen na een update (bijv. HTTP 500 / module not found):
+
+```bash
+# Wis de build-cache en herbouw
+rm -rf .next
+npm run build
+npm start
+```
+
+**Database-pad:** de `DATABASE_URL` in `.env` moet `file:./dev.db` zijn (relatief aan de `prisma/`-map). Gebruik **niet** `file:./prisma/dev.db`.
+
 ## Backup
 
 The entire database is a single file at `prisma/dev.db`. Copy it to back up all your data. You can also export to CSV at any time from the sidebar.

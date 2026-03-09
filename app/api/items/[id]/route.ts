@@ -1,5 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { slugify } from '@/lib/utils'
+
+async function generateUniqueSlug(name: string, excludeId: string): Promise<string> {
+  const base = slugify(name)
+  let slug = base
+  let counter = 2
+  while (true) {
+    const existing = await prisma.item.findFirst({ where: { slug, id: { not: excludeId } } })
+    if (!existing) return slug
+    slug = `${base}-${counter++}`
+  }
+}
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const item = await prisma.item.findUnique({ where: { id: params.id } })
@@ -14,9 +26,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: 'name, category and currentValue are required' }, { status: 400 })
   }
 
+  const slug = await generateUniqueSlug(body.name.trim(), params.id)
+
   const item = await prisma.item.update({
     where: { id: params.id },
     data: {
+      slug,
       name: body.name.trim(),
       category: body.category.trim(),
       brand: body.brand?.trim() || null,

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { CONDITIONS, type Category, type Item } from '@/lib/utils'
+import { CONDITIONS, itemUrl, type Category, type Item } from '@/lib/utils'
 
 type Props = {
   item?: Item
@@ -106,9 +106,13 @@ export default function ItemForm({ item, categories }: Props) {
 
     if (res.ok) {
       const saved = await res.json()
-      router.push(`/items/${saved.id}`)
+      router.push(itemUrl(saved))
       router.refresh()
     } else {
+      const err = await res.json().catch(() => ({}))
+      if (res.status === 409) {
+        setErrors({ name: err.error ?? 'Er bestaat al een item met deze naam' })
+      }
       setLoading(false)
     }
   }

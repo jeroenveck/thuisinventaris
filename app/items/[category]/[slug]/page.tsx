@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { formatCurrency, formatDate, CONDITION_COLORS } from '@/lib/utils'
+import { formatCurrency, formatDate, CONDITION_COLORS, itemUrl } from '@/lib/utils'
 import DeleteButton from '@/components/DeleteButton'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ItemDetailPage({ params }: { params: { id: string } }) {
+export default async function ItemDetailPage({ params }: { params: { category: string; slug: string } }) {
   const [item, categories] = await Promise.all([
-    prisma.item.findUnique({ where: { id: params.id } }),
+    prisma.item.findUnique({ where: { slug: params.slug } }),
     prisma.category.findMany(),
   ])
 
@@ -33,7 +33,7 @@ export default async function ItemDetailPage({ params }: { params: { id: string 
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Link
-            href={`/items/${item.id}/edit`}
+            href={`${itemUrl(item)}/edit`}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

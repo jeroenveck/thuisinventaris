@@ -1,3 +1,21 @@
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // diacritics verwijderen (é → e)
+    .replace(/[^a-z0-9\s-]/g, '')   // speciale tekens verwijderen
+    .trim()
+    .replace(/\s+/g, '-')           // spaties → koppeltekens
+    .replace(/-+/g, '-')            // dubbele koppeltekens samenvoegen
+}
+
+export function itemUrl(item: { category: string; slug?: string | null; id: string }): string {
+  if (item.slug) {
+    return `/items/${slugify(item.category)}/${item.slug}`
+  }
+  return `/items/${item.id}`
+}
+
 export function formatCurrency(value: number | null | undefined): string {
   if (value === null || value === undefined) return '—'
   return new Intl.NumberFormat('nl-NL', {
@@ -53,6 +71,7 @@ export type ItemFormData = {
 
 export type Item = {
   id: string
+  slug: string | null
   name: string
   category: string
   brand: string | null

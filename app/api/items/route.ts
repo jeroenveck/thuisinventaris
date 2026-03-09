@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { slugify } from '@/lib/utils'
+
+async function generateUniqueSlug(name: string, excludeId?: string): Promise<string> {
+  const base = slugify(name)
+  let slug = base
+  let counter = 2
+  while (true) {
+    const existing = await prisma.item.findFirst({
+      where: { slug, ...(excludeId ? { id: { not: excludeId } } : {}) },
+    })
+    if (!existing) return slug
+    slug = `${base}-${counter++}`
+  }
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -42,8 +56,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'name, category and currentValue are required' }, { status: 400 })
   }
 
+  const existingName = await prisma.item.findFirst({ where: { name: body.name.trim() } })
+  if (existingName) {
+    return NextResponse.json({ error: 'Er bestaat al een item met deze naam' }, { status: 409 })
+  }
+
+  const slug = await generateUniqueSlug(body.name.trim())
+
   const item = await prisma.item.create({
     data: {
+      slug,
       name: body.name.trim(),
       category: body.category.trim(),
       brand: body.brand?.trim() || null,
